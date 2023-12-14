@@ -1,0 +1,11 @@
+#componentes_form{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin: 100px 50px 100px 50px;
+}
+
+#componentes_form > *{
+    margin: 12.5px 50px 12.5px 50px;
+}
