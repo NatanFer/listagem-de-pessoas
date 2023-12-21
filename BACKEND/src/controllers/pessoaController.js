@@ -1,20 +1,79 @@
-const Pessoa = require("../models/pessoa");
+const pessoaService = require("../services/pessoa.services");
 
-exports.listarPessoas = async (req, res) => {
-  try {
-    const pessoas = await Pessoa.findAll();
+const pessoaController = {
+  listarPessoas:async (req, res)=>{
+  try{
+    const pessoas = await pessoaService.getPessoa();
     res.json(pessoas);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+  }catch(error){
+    return res.status(500).json({message: error.message});
   }
-};
+  },
 
-exports.inserirPessoa = async (req, res) => {
-  try {
-    const { nome, sobrenome, idade } = req.body;
-    const novaPessoa = await Pessoa.create({ nome, sobrenome, idade });
-    res.status(201).json(novaPessoa);
-  } catch (error) {
-    res.status(400).json({ message: error.message });
+  buscarPessoaById: async (req, res) => {
+    try {
+      const pessoa = await pessoaService.getById(req.params.id);
+      if (!pessoa) {
+        return res
+          .status(404)
+          .json({ statusCode: 404, error: "Essa pessoa não existe!" });
+      }
+      return res.json(pessoa);
+    } catch (error) {
+      return res
+        .statusCode(500)
+        .json({ statusCode: 500, error: "Erro busca pelo registro com Id específicado no banco" });
+    }
+  },
+
+  inserirPessoa: async (req, res) => {
+    try {
+      const novaPessoa = await pessoaService.insertPessoa(req.body);
+      res.status(201).json(novaPessoa);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ statusCode: 500, error: "Erro na tentativa de inserir no registro no banco" });
+    }
+  },
+
+  atualizarPessoa:async (req, res) => {
+    try {
+      const pessoaExistente = await pessoaService.getById(req.params.id);
+      console.log(pessoaExistente);
+      if (!pessoaExistente) {
+        return res
+          .status(404)
+          .json({ statusCode: 404, error: "Pessoa não encontrada" });
+      }
+      const pessoaAtualizada = await pessoaService.updatePessoa(req.body);
+      return res.json(pessoaAtualizada);
+    } catch (error) {
+      return res
+        .statusCode(500)
+        .json({ statusCode: 500, error: "Error na tentativa de atualização do registro" });
+    }
+  },
+
+  deletarPessoa: async (req, res) => {
+    try {
+      const pessoaExistente = await pessoaService.getById(req.params.id);
+      if (!pessoaExistente) {
+        return res
+          .status(404)
+          .json({ statusCode: 404, error: "Pessoa não encontrada" });
+      }
+  
+      await pessoaService.deletePessoa(req.params.id);
+      return res.json({
+        statusCode: 200,
+        message: `A pessoa com id: ${req.params.id} foi deletada com sucesso!`,
+      });
+    } catch (error) {
+      return res
+        .statusCode(500)
+        .json({ statusCode: 500, error: "Erro ao tentar deletar o registro" });
+    }
   }
-};
+}
+
+module.exports = pessoaController;

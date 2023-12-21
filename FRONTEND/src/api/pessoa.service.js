@@ -36,4 +36,58 @@ const apiAddPessoa = async (novaPessoa) => {
   }
 };
 
-export {apiAddPessoa, apiGetPessoas};
+const apiUpdatePessoa = async (id, pessoaEdit) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/atualizar/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(pessoaEdit),
+    });
+
+    if (!res.ok) {
+      throw new Error('Response not ok: ', res)
+    }
+    return await res.json();;
+
+  } catch (error) {
+    throw new Error(error.message)
+  }
+};
+
+const apiDeletePessoa = async (id) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/deletar/${id}`, {
+      method: 'DELETE'
+    });
+
+    if (!res.ok) {
+      throw new Error('Houve erro na atualização da pessoa')
+    }
+
+    const result = await res.json();
+    return result;
+
+  } catch (error) {
+    throw new Error(error.message)
+  }
+};
+
+const apiGetPessoaById = async (id) => {
+  try {
+    const res = await fetch(`${URL_API}/pessoa/${id}`);
+
+    if (!res.ok) {
+      throw new Error('Houve na busca da pessoa. Pessoa não identificada')
+    }
+
+    const result = await res.json();
+    return result;
+
+  } catch (error) {
+    throw new Error(error.message)
+  }
+};
+
+export { apiAddPessoa, apiGetPessoas, apiGetPessoaById, apiUpdatePessoa, apiDeletePessoa };

@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import TextField from "@mui/material/TextField";
 import { Button } from "@mui/material";
 
 import "./form-pessoa.style.css";
 
-const FormPessoa = ({current, insertPessoa }) => {
+const FormPessoa = ({selected, current, insertPessoa }) => {
   const [pessoa, setPessoa] = useState({});
   
+useEffect(()=>{
+  setPessoa(selected)
+},[selected])
+
   const submit = (e) =>{
     e.preventDefault();
     console.log(pessoa)

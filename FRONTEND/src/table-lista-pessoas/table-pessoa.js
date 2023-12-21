@@ -1,4 +1,4 @@
-const TablePessoa = ({ pessoas }) => {
+const TablePessoa = ({ pessoas, handleClick }) => {
   return (
     <div className="m-5">
       <table className="table">
@@ -12,7 +12,7 @@ const TablePessoa = ({ pessoas }) => {
         </thead>
         <tbody>
           {pessoas.map((pessoa, index) => (
-            <tr key={index}  >
+            <tr key={index} onClick={(e)=>{handleClick(e,pessoa);}} onContextMenu={(e)=>{handleClick(e,pessoa);}} >
               <th scope="row">
                 {index+1}
               </th>
